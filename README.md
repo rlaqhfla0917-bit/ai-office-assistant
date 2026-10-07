@@ -26,7 +26,7 @@ SQL/Vector DB 저장까지 전체 파이프라인이 `main.py` 한 번 실행으
 
 ```bash
 git clone https://github.com/rlaqhfla0917-bit/ai-office-assistant.git
-cd meeting_agent
+cd ai-office-assistant
 python -m venv .venv
 # Windows: .venv\Scripts\activate
 # macOS/Linux: source .venv/bin/activate
