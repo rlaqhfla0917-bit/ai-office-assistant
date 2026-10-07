@@ -25,7 +25,7 @@ SQL/Vector DB 저장까지 전체 파이프라인이 `main.py` 한 번 실행으
 ## 빠른 실행
 
 ```bash
-git clone https://github.com/rlaqhfla0917/ai-office-assistant.git
+git clone https://github.com/rlaqhfla0917-ㅠㅑㅅ/ai-office-assistant.git
 cd meeting_agent
 python -m venv .venv
 # Windows: .venv\Scripts\activate
