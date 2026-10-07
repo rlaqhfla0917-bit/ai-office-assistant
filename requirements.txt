@@ -1,0 +1,7 @@
+# Mock 모드 데모(main.py)를 돌리려면 langgraph만 있으면 됩니다.
+langgraph>=1.0.0        # Agent 그래프 / interrupt 승인 루프 / 멀티턴 체크포인터
+
+# 아래는 실제 서비스로 전환할 때 설치하세요.
+openai>=1.0.0           # LLM 추출 / STT (Whisper)
+chromadb>=0.4.0         # Vector DB (RAG)
+python-dotenv>=1.0.0    # .env 로 API 키 관리
