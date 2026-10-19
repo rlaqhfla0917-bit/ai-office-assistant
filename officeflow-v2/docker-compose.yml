@@ -1,0 +1,25 @@
+services:
+  web:
+    build: .
+    ports: ["127.0.0.1:8501:8501"]
+    volumes: ["office_data:/app/data"]
+    environment:
+      OFFICEOPS_DB: /app/data/officeops.sqlite3
+      AI_MODE: offline
+      DEMO_WORKER_TICK: "false"
+      REDIS_URL: redis://redis:6379/0
+    depends_on: [redis]
+  worker:
+    build: .
+    command: ["python", "-m", "officeops.worker"]
+    volumes: ["office_data:/app/data"]
+    environment:
+      OFFICEOPS_DB: /app/data/officeops.sqlite3
+      REDIS_URL: redis://redis:6379/0
+    depends_on: [redis]
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    # Redis carries wake-up notifications only. Durable jobs remain in SQLite.
+volumes:
+  office_data:
