@@ -1,0 +1,7 @@
+fastapi>=0.110,<1
+uvicorn>=0.29,<1
+pydantic>=2,<3
+# Optional OpenAI client used ONLY when AI_MODE=openai and your API key exists.
+openai>=1,<3
+# Optional Redis wakeup notification when REDIS_URL is explicitly configured.
+redis>=5,<7
