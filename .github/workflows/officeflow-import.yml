@@ -1,0 +1,41 @@
+name: Restore OfficeFlow v2 source
+on:
+  push:
+    branches:
+      - officeflow-v2
+    paths:
+      - 'officeflow-v2/.import/part05.txt'
+permissions:
+  contents: write
+jobs:
+  restore:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore source files
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json, base64, zlib
+          root = Path('officeflow-v2')
+          data = ''.join((root / '.import' / f'part{i:02d}.txt').read_text(encoding='ascii') for i in range(1, 6))
+          items = json.loads(zlib.decompress(base64.b64decode(data)))
+          for name, contents in items.items():
+              target = (root / name).resolve()
+              if not target.is_relative_to(root.resolve()):
+                  raise ValueError('Unsafe filename')
+              target.parent.mkdir(parents=True, exist_ok=True)
+              target.write_text(contents, encoding='utf-8')
+          print(f'Restored {len(items)} source files')
+          PY
+      - name: Commit restored files
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add officeflow-v2
+          git rm -rf officeflow-v2/.import
+          git rm .github/workflows/officeflow-import.yml
+          git diff --cached --quiet || git commit -m "Add complete OfficeFlow v2 implementation"
+          git push origin HEAD:officeflow-v2
