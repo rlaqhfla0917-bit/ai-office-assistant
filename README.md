@@ -16,6 +16,23 @@ KT AIVLE School 프로젝트를 포트폴리오용으로 재구성한 프로젝�
 
 ---
 
+
+## Verification & Code Evidence
+
+| 확인하려는 위험 | 검증 시나리오 | 코드 근거 |
+|---|---|---|
+| 다른 담당자의 업무를 수정 | `member`가 타인 `task_id` 변경 요청 | [`permission_node`](agent/graph.py) · [회귀 테스트](tests/test_agent_safety.py) |
+| 사용자가 실행을 거부 | `interrupt()` 후 `resume(False)` | 실제 쓰기 Tool 호출이 없음을 모의 Tool로 확인 |
+| 승인 없이 상태 수정 | `resume(True)` 전에는 실행되지 않음 | 승인 후 `done` 쓰기를 1회만 호출하는지 확인 |
+| 승인 없는 메일 발송 | 메일 초안 미리보기 후 거부 | 모의 `mail_tool_send` 호출이 없는지 확인 |
+| 정보 접근 범위 | 일반 직원의 기간별 업무 조회 | 본인 담당자 필터 확인 |
+
+**자동 검증:** `python -m unittest discover -s tests -v` · [GitHub Actions 실행 기록](https://github.com/rlaqhfla0917-bit/ai-office-assistant/actions/workflows/agent-safety.yml)
+
+**한계:** 테스트는 모의 Tool을 사용하는 오프라인 테스트입니다. `mail_tool_send()`는 현재 콘솔 출력이고, 공개 Streamlit UI는 읽기 중심 모의 시연입니다. 운영 시스템 보안 인증이나 실제 SMTP 발송 성공을 의미하지 않습니다.
+
+---
+
 ## 1. 주요 기능
 
 | 사용자 요청 예시 | 처리 방식 |
