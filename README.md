@@ -3,6 +3,10 @@
 
 KT AIVLE School 프로젝트를 포트폴리오용으로 재구성한 프로젝트입니다.
 
+> **현재 공개 실행 범위:** 기본값 `MOCK_MODE=true`에서는 실제 OpenAI/STT API를 호출하지 않고 규칙 기반 데모를 사용합니다. 메일 발송은 실제 SMTP 전송이 아니라 **콘솔 출력으로 시뮬레이션**합니다(`agent/tools.py`). `streamlit_app.py` 공개 데모는 별도의 읽기 중심 모의 환경이며, 메일 발송·DB 영구 수정·멀티턴 기억을 제공하지 않습니다. 실제 승인 게이트와 상태 변경은 로컬 CLI 예제 `main.py` 및 Agent 코드에서 확인하세요.
+
+**자동 회귀 테스트:** [역할별 접근 / 승인 거절 / 쓰기 차단 / 정상 승인 테스트](tests/test_agent_safety.py) · [GitHub Actions](../../actions/workflows/agent-safety.yml). 테스트는 모의 Tool 기반이며 운영 시스템의 보안 인증을 의미하지 않습니다.
+
 사용자의 질문을 분석해 **정형 데이터는 SQL DB**, **비정형 문서는 Vector DB(RAG)** 에서 조회하고,  
 메일 발송·업무 상태 변경처럼 실제 업무에 영향을 주는 작업은 **LangGraph `interrupt()` 기반 사용자 승인** 후 실행하도록 설계했습니다.
 
