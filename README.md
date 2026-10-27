@@ -1,9 +1,9 @@
 # AI Office Assistant
-### 자연어 질문으로 사내 정보를 조회하고, 필요한 경우 실제 후속 업무까지 수행하는 LangGraph 기반 생성형 AI 업무비서
+### LangGraph 기반 사내 정보 조회·업무 처리 Agent
 
-KT AIVLE School 프로젝트를 포트폴리오용으로 재구성한 프로젝트입니다.
+KT AIVLE School 업무 자동화 프로젝트를 바탕으로 정리한 저장소입니다.
 
-> **현재 공개 실행 범위:** 기본값 `MOCK_MODE=true`에서는 실제 OpenAI/STT API를 호출하지 않고 규칙 기반 데모를 사용합니다. 메일 발송은 실제 SMTP 전송이 아니라 **콘솔 출력으로 시뮬레이션**합니다(`agent/tools.py`). `streamlit_app.py` 공개 데모는 별도의 읽기 중심 모의 환경이며, 메일 발송·DB 영구 수정·멀티턴 기억을 제공하지 않습니다. 실제 승인 게이트와 상태 변경은 로컬 CLI 예제 `main.py` 및 Agent 코드에서 확인하세요.
+> **실행 방식:** 기본 설정인 `MOCK_MODE=true`에서는 가상 데이터로 동작합니다. `main.py`에서 승인 흐름과 상태 변경을 확인할 수 있고, 메일 전송은 콘솔 출력으로 대체합니다. Streamlit 데모는 읽기 전용으로, 메일 발송과 DB 영구 저장은 지원하지 않습니다.
 
 **자동 회귀 테스트:** [역할별 접근 / 승인 거절 / 쓰기 차단 / 정상 승인 테스트](tests/test_agent_safety.py) · [GitHub Actions](../../actions/workflows/agent-safety.yml). 테스트는 모의 Tool 기반이며 운영 시스템의 보안 인증을 의미하지 않습니다.
 
@@ -17,7 +17,7 @@ KT AIVLE School 프로젝트를 포트폴리오용으로 재구성한 프로젝�
 ---
 
 
-## Verification & Code Evidence
+## 코드 및 테스트
 
 | 확인하려는 위험 | 검증 시나리오 | 코드 근거 |
 |---|---|---|
@@ -29,7 +29,7 @@ KT AIVLE School 프로젝트를 포트폴리오용으로 재구성한 프로젝�
 
 **자동 검증:** `python -m unittest discover -s tests -v` · [GitHub Actions 실행 기록](https://github.com/rlaqhfla0917-bit/ai-office-assistant/actions/workflows/agent-safety.yml)
 
-**한계:** 테스트는 모의 Tool을 사용하는 오프라인 테스트입니다. `mail_tool_send()`는 현재 콘솔 출력이고, 공개 Streamlit UI는 읽기 중심 모의 시연입니다. 운영 시스템 보안 인증이나 실제 SMTP 발송 성공을 의미하지 않습니다.
+**테스트 범위:** 모의 도구를 사용한 오프라인 테스트입니다. 실제 SMTP 전송과 운영 환경의 권한 검증은 포함되지 않습니다.
 
 ---
 
