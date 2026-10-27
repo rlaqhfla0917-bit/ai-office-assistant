@@ -1,19 +1,11 @@
-# Public Web Demo
+# Streamlit 웹 데모
 
-Streamlit UI: `streamlit run streamlit_app.py`
+실행: `streamlit run streamlit_app.py`
 
-This is an **isolated mock-mode read-only demonstration**. It executes the existing
-LangGraph agent in a fresh temporary SQLite database for each input. No private
-employee data is accessed. External email, persistent writes and OpenAI calls are
-disabled. Every turn is independently seeded, so multi-turn memory is not
-demonstrated in this public interface. Refer to `main.py` for the CLI multi-turn
-and human-approval implementation.
+가상 데이터를 사용하는 읽기 전용 데모입니다. 질문마다 임시 SQLite 데이터베이스를 새로 만들며 외부 메일 발송, 영구 DB 변경, OpenAI API 호출은 비활성화되어 있습니다. 공개 화면에서는 멀티턴 기억을 제공하지 않습니다.
 
-To deploy, connect this repository in Streamlit Community Cloud, choose
-`streamlit_app.py`, and use `web_requirements.txt` only if configuring a custom
-requirements installation. The platform defaults to root `requirements.txt` which
-already contains LangGraph and the optional dependencies. Install Streamlit separately
-or include it in the root requirements. This change adds Streamlit to the root
-requirements so standard deployment discovers it.
+대화 상태와 사용자 승인 흐름은 로컬 CLI 예제 [`main.py`](../main.py)에서 확인할 수 있습니다.
 
-No API key is needed for the public mock mode.
+## 배포
+
+Streamlit Community Cloud에서 이 저장소를 선택하고 실행 파일을 `streamlit_app.py`로 지정합니다. 필요한 패키지는 루트의 `requirements.txt`에 정의되어 있으며, 모의 데이터 데모에는 API 키가 필요하지 않습니다.
