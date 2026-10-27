@@ -10,6 +10,7 @@ import sys
 from pathlib import Path
 
 import streamlit as st
+from web_demo_context import is_read_only_question, safe_history
 
 ROOT = Path(__file__).resolve().parent
 st.set_page_config(page_title="AI Office Assistant · Portfolio Demo", page_icon="🤖", layout="wide")
@@ -21,11 +22,15 @@ with st.sidebar:
     st.markdown("**체험 가능:** SQL 기반 연차·업무 조회, 규정 검색, 권한 제한")
     st.markdown("**제한:** 실제 메일 전송, 업무 변경, 실시간 데이터 연동")
     requester = st.selectbox("가상 사용자", ["김대리 (일반 직원)", "박과장 (팀장)"])
+    st.caption("같은 가상 사용자에서 최근 3개 질문의 맥락을 이어갑니다. 사용자 변경 시 대화가 초기화됩니다.")
     st.markdown("[GitHub 소스 보기](https://github.com/rlaqhfla0917-bit/ai-office-assistant)")
 examples = ["오늘 연차자 누구야?", "이번 주 마감 업무 뭐 있어?", "출장비 규정 알려줘", "김대리가 맡은 업무 알려줘", "박과장 업무 알려줘"]
 st.markdown("**예시 질문:** " + " · ".join(examples))
 if "messages" not in st.session_state:
     st.session_state.messages = []
+if st.session_state.get("previous_requester") != requester:
+    st.session_state.messages = []
+    st.session_state.previous_requester = requester
 for m in st.session_state.messages:
     with st.chat_message(m["role"]):
         st.markdown(m["content"])
@@ -36,15 +41,19 @@ if question:
         st.markdown(question)
     if len(question) > 400:
         answer = "질문은 400자 이내로 입력해주세요."
-    elif any(x in question for x in ["보내", "메일", "완료 처리", "완료처리", "변경", "삭제"]):
+    elif not is_read_only_question(question):
         answer = "공개 포트폴리오에서는 데이터 변경 및 메일 발송을 비활성화했습니다. 승인 흐름은 GitHub의 LangGraph 코드에서 확인할 수 있습니다."
     else:
         actor = "박과장" if requester.startswith("박") else "김대리"
         role = "lead" if actor == "박과장" else "member"
+        history = safe_history([
+            message["content"] for message in st.session_state.messages[:-1]
+            if message["role"] == "user"
+        ])
         try:
             run = subprocess.run(
                 [sys.executable, str(ROOT / "web_demo_worker.py")],
-                input=json.dumps({"question": question, "requester_name": actor, "requester_role": role}),
+                input=json.dumps({"question": question, "history": history, "requester_name": actor, "requester_role": role}),
                 text=True, capture_output=True, timeout=25,
                 cwd=str(ROOT), env={**os.environ, "MOCK_MODE": "true"}
             )
