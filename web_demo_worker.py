@@ -6,9 +6,13 @@ import os
 import sys
 import tempfile
 from pathlib import Path
+from web_demo_context import is_read_only_question, safe_history
 
 payload = json.loads(sys.stdin.read())
 question = str(payload["question"])[:400]
+if not is_read_only_question(question):
+    raise ValueError("Only read-only demo questions are allowed")
+history = safe_history(payload.get("history"))
 requester_name = payload["requester_name"]
 requester_role = payload["requester_role"]
 if requester_name not in {"김대리", "박과장"} or requester_role not in {"member", "lead"}:
@@ -27,6 +31,8 @@ with tempfile.TemporaryDirectory(prefix="office_portfolio_") as tmp:
         main.ingest_policy_documents()
         main.ingest_meeting()
         main.setup_demo_due_range_tasks()
+        for previous_question in history:
+            graph.ask(previous_question, thread_id="isolated", requester_name=requester_name, requester_role=requester_role)
         response = graph.ask(question, thread_id="isolated", requester_name=requester_name, requester_role=requester_role)
     if response.get("status") == "needs_approval":
         answer = "데모에서는 변경 요청의 실행을 허용하지 않습니다."
