@@ -250,7 +250,7 @@ pip install -r requirements.txt
 python main.py
 ```
 
-기본값은 `MOCK_MODE=true`입니다.
+기본값은 `MOCK_MODE=true`입니다. 공개 Streamlit 데모는 최근 3개 읽기 전용 질문을 재실행해 후속 질문 맥락을 지원하며, 사용자 변경 시 대화가 초기화됩니다. 외부 메일·영구 데이터 변경은 계속 비활성화됩니다.
 
 실제 LLM / STT 경로를 사용하려면 `.env.example`을 참고해 `.env`에 API Key를 설정하고 `MOCK_MODE=false`로 변경합니다.
 
